@@ -2,6 +2,7 @@ import requests
 import re
 import threading
 from bs4 import BeautifulSoup
+from pyvi import ViTokenizer
 
 
 def crawl_data(url):
@@ -76,10 +77,41 @@ def crawl_vnexpress_articles(type):
     return False
 
 
-if __name__ == '__main__':
-    types = ['the-thao', 'the-gioi', 'kinh-doanh', 'giai-tri', 'phap-luat', 'giao-duc', 'suc-khoe', 'doi-song',
-             'du-lich', 'khoa-hoc']
+def tokenize_string(text):
+    return ViTokenizer.tokenize(text)
 
-    for type in types:
-        thread = threading.Thread(target=crawl_vnexpress_articles, args=(type,))
+
+def tokenize_articles(type):
+    file_in_path = './crawl/{}'.format(type)
+    file_out_path = './data/{}'.format(type)
+    content = read_text_from_file(file_in_path)
+
+    print('tokenize {}'.format(type))
+
+    with open(file_out_path, 'w') as file:
+        print(tokenize_string(content))
+        # file.write()
+        # file.close()
+
+
+if __name__ == '__main__':
+    article_types = ['the-thao',
+                     # 'the-gioi',
+                     # 'kinh-doanh',
+                     # 'giai-tri',
+                     # 'phap-luat',
+                     # 'giao-duc',
+                     # 'suc-khoe',
+                     # 'doi-song',
+                     # 'du-lich',
+                     'khoa-hoc']
+
+    # crawl content
+    # for type in article_types:
+    #     thread = threading.Thread(target=crawl_vnexpress_articles, args=(type,))
+    #     thread.start()
+
+    # tokenize data
+    for type in article_types:
+        thread = threading.Thread(target=tokenize_articles, args=(type,))
         thread.start()
