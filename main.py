@@ -65,13 +65,13 @@ def crawl_vnexpress_articles(type):
 
             text = crawl_data(a_element['href'])
             text = format_text(text)
-            write_text_to_file(type, text)
+            write_text_to_file('./crawl/{}.txt'.format(type), text)
 
             count += 1
 
             print('{}: {}'.format(type, count))
 
-            if count == 1000:
+            if count == 10:
                 return True
 
     return False
@@ -82,28 +82,27 @@ def tokenize_string(text):
 
 
 def tokenize_articles(type):
-    file_in_path = './crawl/{}'.format(type)
-    file_out_path = './data/{}'.format(type)
+    file_in_path = './crawl/{}.txt'.format(type)
+    file_out_path = './data/{}.txt'.format(type)
     content = read_text_from_file(file_in_path)
 
     print('tokenize {}'.format(type))
 
     with open(file_out_path, 'w') as file:
-        print(tokenize_string(content))
-        # file.write()
-        # file.close()
+        file.write(tokenize_string(content))
+        file.close()
 
 
 if __name__ == '__main__':
     article_types = ['the-thao',
-                     # 'the-gioi',
-                     # 'kinh-doanh',
-                     # 'giai-tri',
-                     # 'phap-luat',
-                     # 'giao-duc',
-                     # 'suc-khoe',
-                     # 'doi-song',
-                     # 'du-lich',
+                     'the-gioi',
+                     'kinh-doanh',
+                     'giai-tri',
+                     'phap-luat',
+                     'giao-duc',
+                     'suc-khoe',
+                     'doi-song',
+                     'du-lich',
                      'khoa-hoc']
 
     # crawl content
