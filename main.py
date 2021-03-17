@@ -1,5 +1,6 @@
 import requests
 import re
+import threading
 from bs4 import BeautifulSoup
 
 
@@ -57,16 +58,19 @@ def crawl_vnexpress_articles(type):
         elements = root.findAll('article', {'class': 'item-news item-news-common'})
 
         for element in elements:
-            if element.find('h3') is None:
+            a_element = element.find('a')
+            if a_element is None:
                 continue
 
-            a_element = element.find('h3').find('a')
             text = crawl_data(a_element['href'])
             text = format_text(text)
             write_text_to_file(type, text)
 
             count += 1
-            if count == 10:
+
+            print('{}: {}'.format(type, count))
+
+            if count == 1000:
                 return True
 
     return False
@@ -77,4 +81,5 @@ if __name__ == '__main__':
              'du-lich', 'khoa-hoc']
 
     for type in types:
-        crawl_vnexpress_articles(type)
+        thread = threading.Thread(target=crawl_vnexpress_articles, args=(type,))
+        thread.start()
